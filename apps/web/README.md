@@ -1,48 +1,21 @@
-# Nuxt Example
+# apps/web — the site
 
-Deploy your [Nuxt](https://nuxt.com) project to Vercel with zero configuration.
+A Nuxt site from Vercel's
+[Nuxt boilerplate](https://github.com/vercel/examples/tree/main/framework-boilerplates/nuxtjs)
+(MIT): `app.vue` rendering the Nuxt welcome page, with the index route
+pre-rendered, running on Cloudflare Workers + Static Assets through Nitro's
+`cloudflare_module` preset.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/nuxtjs&template=nuxtjs)
-
-_Live Example: https://nuxtjs-template.vercel.app_
-
-Look at the [Nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
-
-## Setup
-
-Make sure to install the dependencies:
+The site's name is `siteName` in `app.config.ts`; the page title reads it.
+Replace `<NuxtWelcome />` in `app.vue` with your own code, and add a
+`pages/` directory when you want routes.
 
 ```bash
-# yarn
-yarn
-
-# npm
-npm install
-
-# pnpm
-pnpm install --shamefully-hoist
+pnpm dev        # nuxt dev on http://localhost:3000
+pnpm test       # vitest in the nuxt environment (@nuxt/test-utils)
+pnpm build      # nuxt build → .output/server (the Worker) + .output/public (the assets)
+pnpm preview    # wrangler dev over the built Worker (wrangler.jsonc)
 ```
 
-## Development Server
-
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://nuxt.com/docs/getting-started/deployment#presets) for more information.
+How it is deployed — per environment, on merge to `main` — is the
+repository's README and `component.yaml` beside this file.
