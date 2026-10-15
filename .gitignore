@@ -4,6 +4,7 @@ dist/
 .open-next/
 .nuxt/
 .output/
+node-compile-cache/
 .wrangler/
 .turbo/
 coverage/
