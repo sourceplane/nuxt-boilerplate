@@ -8,7 +8,7 @@ This is the second port without OpenNext, on the shape astro-boilerplate set for
 
 | Field | Value |
 |-------|-------|
-| Status | Draft |
+| Status | ✅ Shipped — NB0–NB2 landed (#1, #2, #3) |
 | Cluster | **NB** (NB0–NB2) |
 | Owner(s) | `apps/web` (the site, with its `@nuxt/test-utils` test) |
 | Builds on | `cirrus-baseline` conventions; the `astro-boilerplate` port's repository shape |
@@ -16,7 +16,7 @@ This is the second port without OpenNext, on the shape astro-boilerplate set for
 | Changes | Nitro preset `cloudflare_module` (with its generated config off), Nuxt 3.8 → 4; `app.vue`, the route rules and the public assets are untouched |
 | Decisions locked | (1) Nitro's Cloudflare Workers preset, not OpenNext (Nuxt is not Next) and not Cloudflare Pages. (2) The committed `wrangler.jsonc` is the deployable config; Nitro's `deployConfig` is off. (3) `app.vue` stays at the root — Nuxt 4 keeps the root as `srcDir` when there is no `app/` directory. (4) Tests live in the app (`@nuxt/test-utils` needs Nuxt's Vite config and auto-imports). (5) Nuxt 4 (current major; the template floats `^3.8`). |
 | Gate | NB1 is the first user-visible rung. |
-| Shipped as | |
+| Shipped as | `main` after [#3](https://github.com/sourceplane/nuxt-boilerplate/pull/3); verified locally under `wrangler dev`, deploy gated until a workspace is linked |
 
 ## Read order
 
