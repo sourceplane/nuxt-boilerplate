@@ -9,7 +9,7 @@ metadata:
 spec:
   title: "Vercel's Nuxt boilerplate on Cloudflare Workers"
   summary: "The Vercel Nuxt boilerplate — app.vue rendering the Nuxt welcome page, with the index route pre-rendered — runs on Cloudflare Workers + Static Assets through Nitro's own Cloudflare Workers preset, inside the Cirrus baseline's repository conventions. Nuxt 3.8 becomes Nuxt 4; no OpenNext, the framework's native preset emits the Worker, and the repository shape (intent, component, checks lane, gated Orun lane) is the one astro-boilerplate set."
-  state: backlog
+  state: completed
   milestones:
     - name: "NB0 — the spec"
       exitCriteria:

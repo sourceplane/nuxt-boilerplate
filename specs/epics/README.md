@@ -7,6 +7,6 @@ folder is the adoption; the merge creates the epic in the workspace.
 
 | Epic | Cluster | Status | What it is |
 |------|---------|--------|------------|
-| [`nuxt-boilerplate/`](./nuxt-boilerplate/) | **NB** | Draft | Vercel's Nuxt boilerplate, equivalent in code and function, running on Cloudflare Workers + Static Assets |
+| [`nuxt-boilerplate/`](./nuxt-boilerplate/) | **NB** | ✅ Shipped | Vercel's Nuxt boilerplate, equivalent in code and function, running on Cloudflare Workers + Static Assets |
 
 As-built ≠ intent: what shipped lives in each epic's `IMPLEMENTATION-STATUS.md`.
