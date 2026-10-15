@@ -1,0 +1,28 @@
+# The epic's declaration. metadata.name equals the directory name; metadata.key
+# is the task-key prefix this epic reserves (NB → NB-1, NB-2, …). Owner, target
+# date and health are the platform's — never written here.
+apiVersion: orun.io/v1
+kind: Epic
+metadata:
+  name: nuxt-boilerplate
+  key: NB
+spec:
+  title: "Vercel's Nuxt boilerplate on Cloudflare Workers"
+  summary: "The Vercel Nuxt boilerplate — app.vue rendering the Nuxt welcome page, with the index route pre-rendered — runs on Cloudflare Workers + Static Assets through Nitro's own Cloudflare Workers preset, inside the Cirrus baseline's repository conventions. Nuxt 3.8 becomes Nuxt 4; no OpenNext, the framework's native preset emits the Worker, and the repository shape (intent, component, checks lane, gated Orun lane) is the one astro-boilerplate set."
+  state: backlog
+  milestones:
+    - name: "NB0 — the spec"
+      exitCriteria:
+        - "the doc set and the task contracts are on main"
+      tasks: [NB-1]
+    - name: "NB1 — the site on Workers"
+      exitCriteria:
+        - "apps/web is the upstream boilerplate on Nuxt 4 with Nitro's cloudflare_module preset"
+        - "`pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build` are green on main (Checks)"
+        - "`wrangler dev` over the committed wrangler.jsonc serves / (the welcome page) and the hashed _nuxt assets"
+      tasks: [NB-2]
+    - name: "NB2 — ready to instantiate"
+      exitCriteria:
+        - "the README says how to run, test, preview and deploy it"
+        - "the as-built status records every departure from the upstream template"
+      tasks: [NB-3]
