@@ -8,8 +8,8 @@ This is the second port without OpenNext, on the shape astro-boilerplate set for
 
 | Field | Value |
 |-------|-------|
-| Status | 🟡 NB0–NB2 shipped (#1, #2, #3); NB3 — a baseline — in progress (NB-4) |
-| Cluster | **NB** (NB0–NB3) |
+| Status | 🟡 NB0–NB3 shipped (#1–#4); NB4 — one landing — in progress (NB-5) |
+| Cluster | **NB** (NB0–NB4) |
 | Owner(s) | `apps/web` (the site, with its `@nuxt/test-utils` test) |
 | Builds on | `cirrus-baseline` conventions; the `astro-boilerplate` port's repository shape |
 | Upstream | [vercel/examples `framework-boilerplates/nuxtjs`](https://github.com/vercel/examples/tree/main/framework-boilerplates/nuxtjs) |
@@ -33,3 +33,4 @@ This is the second port without OpenNext, on the shape astro-boilerplate set for
 | NB1 — the site on Workers | `apps/web` on Nuxt 4 with the Cloudflare preset, a test, green checks | `wrangler dev` serves the welcome page; Checks green |
 | NB2 — ready to instantiate | README, as-built status | a reader can run, test, preview and deploy it |
 | NB3 — a baseline | card, build document, rename, bootstrap tooling, tests | a new site goes from nothing to live in three phases; Baseline CI green |
+| NB4 — one landing | the site in one landing, each bootstrap landing checked by `plan` alone (cirrus-baseline baseline-v22's shape) | a site bootstrapped from the next tag is live on stage and prod in two landings, its wall-clock measured |

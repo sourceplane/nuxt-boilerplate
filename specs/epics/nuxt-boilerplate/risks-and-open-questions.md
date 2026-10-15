@@ -61,13 +61,17 @@ component use Node 22.
 Everything short of the platform is proven on every pull request: the card
 against the build, the blueprint read by the pinned orun, the leak gate, the
 offline bootstrap with the blueprint's own hooks, the site's own plan for the
-02-site merge, and the produced site built in a staged job tree,
+01-product merge, and the produced site built in a staged job tree,
 dry-deployed, served and smoke-tested. What is NOT proven is the platform's
 half — the repository created and linked, the Cloudflare token minted by
 `integrations/reconcile`, a real `wrangler deploy`, the probes against
 workers.dev — and with it NB-C (`nodejs_compat` alone on the real runtime).
 Hence the registry row stays `unlisted` until one bootstrap from the tag has
-come up, as the portfolio baseline's did.
+come up, as the portfolio baseline's did. A console bootstrap on 2026-10-15
+(workspace `nuxt-live`, `bst_CPCA88V4`) never started: the platform's cloud
+build sandbox failed to provision ("Provisioning failed: daytona POST
+sandbox: 400 from provider") — a platform capacity issue, not this baseline —
+so nothing of the platform's half was exercised.
 
 ## NB-H — A custom domain is the owner's step (ACCEPTED)
 

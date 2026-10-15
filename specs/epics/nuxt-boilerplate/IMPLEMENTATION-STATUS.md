@@ -8,7 +8,8 @@ the code departed from `design.md` or from the upstream template.
 | NB0 — the spec | ✅ Shipped | [#1](https://github.com/sourceplane/nuxt-boilerplate/pull/1) |
 | NB1 — the site on Workers | ✅ Shipped | [#2](https://github.com/sourceplane/nuxt-boilerplate/pull/2) |
 | NB2 — ready to instantiate | ✅ Shipped | [#3](https://github.com/sourceplane/nuxt-boilerplate/pull/3) |
-| NB3 — a baseline | 🟡 In progress | this PR (NB-4) |
+| NB3 — a baseline | ✅ Shipped | [#4](https://github.com/sourceplane/nuxt-boilerplate/pull/4) (NB-4), tagged `baseline-v1` |
+| NB4 — one landing | 🟡 In progress | this PR (NB-5), to be tagged `baseline-v2` |
 
 ## Departures from the upstream template
 
@@ -76,6 +77,34 @@ and credits the template (MIT).
 | discovery roots | `infra/`, `packages/`, `tests/` absent | each carries a `.gitkeep` | `orun validate` fails on a missing root; `tests/` stays empty (the tests live in the app) |
 | `.gitignore` | — | `node-compile-cache/` | Node's compile cache appeared in `apps/web` here once; the blueprint's `ignore` keeps it out of a site too |
 | `tasks/NB-1..3` | no `metadata` | `metadata.name` and `title` | `orun work check` (≥ v2.79) refused them |
+
+## One landing (NB4)
+
+cirrus-baseline's baseline-v22 builds its whole product in one landing
+(`01-product`) and checks each bootstrap pull request with `plan` alone, and
+portfolio-starter-kit took the same shape in PK-6. This baseline now does the
+same (NB-5):
+
+| Before (baseline-v1) | Now | Why |
+|---|---|---|
+| three phases: `01-scaffold`, `02-site`, `03-docs` | two: `01-product` (every module), `03-docs` (hooks only; its name kept, the gap kept, as Cirrus kept `08-docs`) | a landing has a fixed cost (place, PR, checks, merge, convergence start); nothing in the scaffold/site split was order the plan could not carry |
+| `01-scaffold` waited on Checks (install, typecheck, lint, test, build) and `plan`; `02-site` merged without waiting (`wait: false`); `03-docs` waited on both | every landing waits on its PR's CI, which on `orun/BASE-…` is `plan` alone: `ci.yml` skips the lanes and `checks.yml` now skips its job | the convergence on main installs, builds, deploys and smoke-tests the site for real; Checks on the PR was the same install and build again, and most of each landing's wait |
+| the site's tests (`apps/web/test`) ran in Checks on `02-site`'s PR, which the landing did not wait for | not run on a bootstrap landing at all | the convergence runs no unit tests (there is no test component; NB-E), and nothing waited on them before either. They are the tests Baseline CI's end-to-end tier runs over the same bootstrapped tree, and every later pull request of a site runs them in Checks |
+| the brokered secrets minted in `02-site`'s `pre` | minted in `01-product`'s `post`, after `repo` and `link`, before `land` | the repository exists and is linked before a secret is written for its project — Cirrus's order |
+| `02-site` seeded the lockfile from the baseline's, then pruned | `pnpm install --lockfile-only` only confirms the placed lockfile | the whole tree is placed at once, so the complete lockfile is already the right one |
+| `.baseline/tasks/01-scaffold`, `02-site` | `.baseline/tasks/01-product` (`affects: [web]` — the retouch set) | one landing, one task |
+| the offline bootstrap committed one landing per phase from an empty repository | the repository's empty first commit, then one per phase | on the platform the first pull request opens against an empty "Initial commit" by `orun`; it is the base the one landing's push is planned against (`testing/placement.test.sh` §4, `testing/e2e.test.sh` §2) |
+| e2e ran the Checks at the scaffold's landing and at the finished site | at the finished site only | there is no scaffold landing, and no landing waits on Checks |
+| the card's `expectedMinutes` 12 (3 + 6 + 3) | 5 (4 + 1) | one landing fewer and no Checks waits; `03-docs` places nothing and builds nothing |
+
+Unmeasured. This baseline has not been bootstrapped live yet: a console
+bootstrap attempt on 2026-10-15 (workspace `nuxt-live`, `bst_CPCA88V4`) never
+started — the platform's cloud build sandbox failed to provision
+("Provisioning failed: daytona POST sandbox: 400 from provider"), a platform
+capacity issue, not this baseline. The five minutes is an estimate; the
+sibling site baselines measured 7m07s–8m43s from the console on the
+three-landing shape this replaces (portfolio-starter-kit `baseline-v2`:
+8m43s). The first bootstrap from `baseline-v2` replaces it (risks NB-G).
 
 ## Verified (NB3)
 
