@@ -57,8 +57,16 @@ spec:
     installCommand: pnpm install --frozen-lockfile
     buildCommand: pnpm exec turbo run build --filter=@app/web
 
-    # Smoke: the home page renders and carries the app's marker text.
-    smokeCommand: "html=$(curl -sfL \"${DEPLOYED_URL}/\") && echo \"${html}\" | grep -q 'Welcome to Nuxt'"
+    # Smoke: the home page is the Nuxt app (its `id="__nuxt"` root — not the
+    # site's name, which is the owner's to change (app.config.ts) and
+    # HTML-escaped when it carries an `&` or `'`), and a path no static asset
+    # matches is answered by the Worker's own render. The home page alone is
+    # the pre-rendered index, which Static Assets serves without running the
+    # Worker; the second request is the one that runs it. It must answer 200
+    # (the app has no router, so every path renders app.vue) or, once the app
+    # grows a pages/ directory, Nuxt's 404 — never a 5xx. The page is buffered
+    # before grep so an early match cannot SIGPIPE curl.
+    smokeCommand: "html=$(curl -sfL \"${DEPLOYED_URL}/\") && echo \"${html}\" | grep -q 'id=\"__nuxt\"' && code=$(curl -s -o /dev/null -w '%{http_code}' \"${DEPLOYED_URL}/__smoke\") && { [ \"${code}\" = 200 ] || [ \"${code}\" = 404 ]; }"
   labels:
     team: platform
     layer: delivery
