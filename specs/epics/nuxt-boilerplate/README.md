@@ -8,12 +8,12 @@ This is the second port without OpenNext, on the shape astro-boilerplate set for
 
 | Field | Value |
 |-------|-------|
-| Status | ✅ Shipped — NB0–NB2 landed (#1, #2, #3) |
-| Cluster | **NB** (NB0–NB2) |
+| Status | 🟡 NB0–NB2 shipped (#1, #2, #3); NB3 — a baseline — in progress (NB-4) |
+| Cluster | **NB** (NB0–NB3) |
 | Owner(s) | `apps/web` (the site, with its `@nuxt/test-utils` test) |
 | Builds on | `cirrus-baseline` conventions; the `astro-boilerplate` port's repository shape |
 | Upstream | [vercel/examples `framework-boilerplates/nuxtjs`](https://github.com/vercel/examples/tree/main/framework-boilerplates/nuxtjs) |
-| Changes | Nitro preset `cloudflare_module` (with its generated config off), Nuxt 3.8 → 4; `app.vue`, the route rules and the public assets are untouched |
+| Changes | Nitro preset `cloudflare_module` (with its generated config off), Nuxt 3.8 → 4; the route rules and the public assets are untouched, and so is `app.vue` but for the page title, which reads the site's name from `app.config.ts` (NB3) |
 | Decisions locked | (1) Nitro's Cloudflare Workers preset, not OpenNext (Nuxt is not Next) and not Cloudflare Pages. (2) The committed `wrangler.jsonc` is the deployable config; Nitro's `deployConfig` is off. (3) `app.vue` stays at the root — Nuxt 4 keeps the root as `srcDir` when there is no `app/` directory. (4) Tests live in the app (`@nuxt/test-utils` needs Nuxt's Vite config and auto-imports). (5) Nuxt 4 (current major; the template floats `^3.8`). |
 | Gate | NB1 is the first user-visible rung. |
 | Shipped as | `main` after [#3](https://github.com/sourceplane/nuxt-boilerplate/pull/3); verified locally under `wrangler dev`, deploy gated until a workspace is linked |
@@ -32,3 +32,4 @@ This is the second port without OpenNext, on the shape astro-boilerplate set for
 | NB0 — the spec | this doc set and the task contracts | merged on `main` |
 | NB1 — the site on Workers | `apps/web` on Nuxt 4 with the Cloudflare preset, a test, green checks | `wrangler dev` serves the welcome page; Checks green |
 | NB2 — ready to instantiate | README, as-built status | a reader can run, test, preview and deploy it |
+| NB3 — a baseline | card, build document, rename, bootstrap tooling, tests | a new site goes from nothing to live in three phases; Baseline CI green |

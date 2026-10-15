@@ -8,6 +8,7 @@ the code departed from `design.md` or from the upstream template.
 | NB0 — the spec | ✅ Shipped | [#1](https://github.com/sourceplane/nuxt-boilerplate/pull/1) |
 | NB1 — the site on Workers | ✅ Shipped | [#2](https://github.com/sourceplane/nuxt-boilerplate/pull/2) |
 | NB2 — ready to instantiate | ✅ Shipped | [#3](https://github.com/sourceplane/nuxt-boilerplate/pull/3) |
+| NB3 — a baseline | 🟡 In progress | this PR (NB-4) |
 
 ## Departures from the upstream template
 
@@ -47,7 +48,68 @@ workspace lockfile replaces the template's.
 template and would churn on every upgrade, so `apps/web/.gitignore` keeps
 it out.
 
-## Verified
+### The page title is the site's name, from `app.config.ts` (NB3)
+
+`app.vue` reads `siteName` from `app.config.ts` (`useAppConfig()`) and passes
+it to `<NuxtWelcome :title>`; the welcome page's own title, "Welcome to
+Nuxt!", is gone, and this repository's site is titled "Nuxt Boilerplate".
+It is the seam the baseline's rename rewrites (risks NB-I). The welcome
+page's body is untouched. `test/app.test.ts` gains a case that the document
+title is `siteName`.
+
+### `apps/web/README.md` is the app's, not the template's (NB3)
+
+The upstream README advertised "Deploy with Vercel", a Vercel demo and Nuxt
+3's documentation, and it ships into every site. It now describes the app
+and credits the template (MIT).
+
+## Departures from the port (NB3)
+
+| What | Before | After | Why |
+|---|---|---|---|
+| `apps/web` smoke | `grep 'Welcome to Nuxt'` (the title) | `id="__nuxt"` on `/`, and a 200 or 404 from the Worker on `/__smoke` | the title is the owner's name now, and `/` alone never runs the Worker (risks NB-L) |
+| `ci.yml` gate | `vars.ORUN_CI == 'true'` | skip only while `intent.yaml` names `ws_CHANGE_ME` | a bootstrap cannot set a repository variable |
+| `checks.yml` triggers | push to main and pull requests | pull requests and `workflow_dispatch` | a push to main must start `ci.yml` alone (risks NB-K) |
+| stack-tectonic | 0.18.2 | 0.19.0 | first-deploy and smoke retries (0.19.0); not 0.20.0's lane-shared install (risks NB-J) |
+| orun lane pin | v2.78.0 | v2.78.4 | the portfolio and cirrus baselines' pin |
+| `intent.yaml` | terraform `parameterDefaults`; docs pages under `specs/` | neither; docs pages `ai/context/*` | no terraform component; the pages must exist in a site |
+| discovery roots | `infra/`, `packages/`, `tests/` absent | each carries a `.gitkeep` | `orun validate` fails on a missing root; `tests/` stays empty (the tests live in the app) |
+| `.gitignore` | — | `node-compile-cache/` | Node's compile cache appeared in `apps/web` here once; the blueprint's `ignore` keeps it out of a site too |
+| `tasks/NB-1..3` | no `metadata` | `metadata.name` and `title` | `orun work check` (≥ v2.79) refused them |
+
+## Verified (NB3)
+
+- `orun new --status` reads the blueprint at v2.58.11 (the bootstrap floor),
+  v2.78.4 (the lane pin) and v2.79.0; `orun validate` and `orun work check`
+  clean.
+- `testing/{manifest,phases,coverage,rebrand,retouch,bootstrap-defer}.test.sh`
+  green.
+- `testing/leak.test.sh` (at v2.58.11, v2.78.4 and v2.79.0): 41 files
+  derived; nothing of the factory, nothing local or built; no provenance
+  prose.
+- `testing/placement.test.sh` (at v2.58.11, v2.78.4 and v2.79.0; fixture
+  "Sam's Notes & Links" / `acme-inc/acme-nuxt`): three landings; rebrand
+  `--verify` clean;
+  workspace re-tenanted, `work:` stripped, promotion and dev lanes restored;
+  deployment record rendered; no tracked file names a factory path; the site's
+  own `orun plan` for the 02-site merge deploys `web` to stage and prod side by
+  side with the site's Worker name, smoke and secret refs; `--resume` changes
+  nothing.
+- `testing/e2e.test.sh` (at v2.78.4 and v2.79.0): the scaffold's landing and
+  the finished site pass the Checks sequence; the stage lane's
+  `install-workspace-dependencies`, `build-app`, `verify-build-output` and
+  `deploy-dry-run` pass in a job tree staged as orun stages it; `wrangler dev`
+  serves the built Worker from that tree; the component's own smoke passes,
+  wrapped as the composition wraps it; `/` and a Worker-rendered path are the
+  Nuxt app titled "Sam's Notes & Links", the `/_nuxt/` chunks carry the
+  immutable caching of Nitro's `_headers`, `/_payload.json` and
+  `/favicon.ico` answer.
+- The same e2e with the pin moved to stack-tectonic 0.20.0 (lane-scoped
+  install, `node_modules` linked out of the staged tree): green — the Nuxt
+  build follows the link (risks NB-J).
+- Not verified: a live bootstrap against a workspace (risks NB-G).
+
+## Verified (NB1–NB2)
 
 - Local: `nuxt typecheck` (0 errors), `pnpm test` (1 test, `mountSuspended`
   over `app.vue`), `pnpm build` green; `wrangler dev --config wrangler.jsonc`:
