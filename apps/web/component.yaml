@@ -1,0 +1,66 @@
+apiVersion: sourceplane.io/v1
+kind: Component
+metadata:
+  name: web
+  description: The Nuxt site (Nuxt on Cloudflare Workers + Static Assets via Nitro's cloudflare_module preset, per environment)
+spec:
+  type: cloudflare-workers-assets-turbo
+  lifecycle: production
+  owner: platform
+  domain: web
+  path: apps/web
+  # Its own lane per environment: the framework build is the longest job in
+  # the plan, and a shared lane would wait on it.
+  lane: isolated
+  subscribe:
+    environments:
+      - name: dev
+        profile: verify
+      - name: stage
+        profile: verify
+        profileRules:
+          - profile: deploy
+            when:
+              triggerRef: github-push-main
+      - name: prod
+        profile: verify
+        profileRules:
+          - profile: deploy
+            when:
+              triggerRef: github-push-main
+  parameters:
+    nodeVersion: "22"
+    pnpmVersion: "10.12.1"
+
+    workspaceDir: ../..
+    appDir: .
+
+    turboFilter: "@app/web"
+    # The committed config: worker name, compatibility date and flags, the
+    # Worker entry and the ASSETS binding over the build output.
+    wranglerConfig: wrangler.jsonc
+
+    # Nitro's cloudflare_module preset emits the Worker under .output/server
+    # and the static output (the prerendered index, _nuxt/* hashed assets,
+    # public/) under .output/public — both deploy in one `wrangler deploy`.
+    workerEntrypoint: .output/server/index.mjs
+    assetsDir: .output/public
+
+    # Per-env worker name: nuxt-boilerplate-web-{dev,stage,prod}.
+    workerName: nuxt-boilerplate-web
+    environmentAwareWorkerName: true
+
+    # The account's workers.dev subdomain; exported to the smoke step as
+    # ${WORKERS_DEV_SUBDOMAIN} and used to build ${DEPLOYED_URL}.
+    workersDevSubdomain: your-workers-subdomain
+
+    installCommand: pnpm install --frozen-lockfile
+    buildCommand: pnpm exec turbo run build --filter=@app/web
+
+    # Smoke: the home page renders and carries the app's marker text.
+    smokeCommand: "html=$(curl -sfL \"${DEPLOYED_URL}/\") && echo \"${html}\" | grep -q 'Welcome to Nuxt'"
+  labels:
+    team: platform
+    layer: delivery
+    surface: web
+    runtime: cloudflare
