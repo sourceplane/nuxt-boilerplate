@@ -78,7 +78,7 @@ copy somebody else's.
 
 | portfolio-starter-kit | Here | Why the difference |
 |---|---|---|
-| `apps/web` + `tests/web`, two components in `02-site` | `apps/web` alone | a Nuxt component test needs Nuxt's Vite config and auto-imports, so the tests live in the app (NB-E); there is no test component to place, retouch or cover |
+| `apps/web` + `tests/web`, two components in `01-product` | `apps/web` alone | a Nuxt component test needs Nuxt's Vite config and auto-imports, so the tests live in the app (NB-E); there is no test component to place, retouch or cover |
 | the name seam `apps/web/app/site.ts` (`SITE_NAME`, `SOURCE_URL`) | `siteName` in `apps/web/app.config.ts`, read with `useAppConfig()` | an `app/` directory would make Nuxt 4 move its source root there and stop finding the root `app.vue` (risks NB-I); the site shows no source link, so the seam carries none |
 | build origin baked in (`NEXT_PUBLIC_SITE_URL`, `SITE_URL`) | none | the welcome page carries no absolute link to its own origin; a custom domain is attached, not built in |
 | smoke: the nav's `/blog` link and `/rss` | the `id="__nuxt"` root on `/`, and a 200 or 404 from the Worker on a path no asset matches | the old smoke grepped the title, which is now the owner's name; `/` alone is served by Static Assets without the Worker running (risks NB-L) |
@@ -97,6 +97,15 @@ valid string, and Vue escapes it in the page.
 plans nothing only while `intent.yaml` names the placeholder `ws_CHANGE_ME`,
 which this repository carries and no site does. `checks.yml` runs on pull
 requests only, so `ci.yml` is the one run a push to main has (risks NB-K).
+
+**One landing builds the site (NB4, cirrus-baseline baseline-v22's shape, as
+portfolio-starter-kit took it in PK-6).** Two phases: `01-product` places
+every module, brands the tree once, creates and links the repository, mints
+the brokered secrets and lands the whole site as one pull request, whose
+convergence deploys it to stage and prod; `03-docs` records it. Each bootstrap
+landing is checked by `plan` alone — `ci.yml` skips its lanes and
+`checks.yml` its job on `orun/BASE-…` branches — because the convergence on
+main installs, builds, deploys and smoke-tests the site for real.
 
 **Testing without the platform.** `testing/lib/bootstrap.sh` places every
 phase and runs the blueprint's own `run:` hooks, read out of the document, so

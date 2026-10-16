@@ -30,7 +30,7 @@ README (run, test, preview, deploy), `IMPLEMENTATION-STATUS.md`, epic
 - the README quick start works from a fresh clone
 - the status file lists every PR and departure
 
-## NB3 — a baseline 🟡
+## NB3 — a baseline ✅
 
 `blueprint.yaml`, `repo-blueprint.yaml`, `.baseline/` (identity, task
 contracts, the site's README), the `siteName` seam in `apps/web/app.config.ts`,
@@ -47,6 +47,24 @@ with what its first live bootstrap found already in.
   (`testing/e2e.test.sh`, in a staged job tree)
 - the status file records what is proven offline and what only a live
   bootstrap can prove
+
+## NB4 — one landing 🟡
+
+cirrus-baseline baseline-v22's shape, as portfolio-starter-kit took it in
+PK-6: `01-scaffold` and `02-site` become one phase, `01-product`, that places
+every module, creates and links the repository, mints the brokered secrets,
+lands the whole site as one pull request and watches its convergence deploy
+it to stage and prod; `03-docs` keeps its name and records it. `checks.yml`
+skips its job on `orun/BASE-…` branches, so each landing waits on `plan`
+alone. The card's programme and `expectedMinutes` follow (5, was 12).
+
+**Done when**
+- `testing/phases.test.sh` holds the two-phase partition, and
+  `testing/manifest.test.sh` the card to it
+- `Baseline CI` is green, the offline bootstrap starting from the
+  repository's empty first commit as the platform's does
+- a site bootstrapped from the tag cut after it is live on stage and prod,
+  its wall-clock recorded in the status file
 
 ## After NB3 (outside this repository)
 
