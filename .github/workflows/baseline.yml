@@ -80,6 +80,11 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
+          # This job installs nothing either: with the lockfile hook gone the
+          # offline bootstrap never runs pnpm, so there is no store, and the
+          # cache setup-node v5 turns on by itself (package.json names a
+          # packageManager) fails the job on saving a path that does not exist.
+          package-manager-cache: false
       - name: repo-blueprint.yaml, read by the pinned CLI
         run: |
           set -euo pipefail
