@@ -1,7 +1,7 @@
 # nuxt-boilerplate — operating contract (for humans and agents)
 
 This is the standing guide to how this site is deployed and operated.
-Instance facts (live URLs, workspace, secrets inventory) live in
+Instance facts (live URLs, workspace, the secrets it uses) live in
 [deployment.md](deployment.md), rendered from probed reality by the
 bootstrap's `03-docs` phase; this file is the contract that stays true
 between deployments. It is written to give an agent with repository read
@@ -18,8 +18,10 @@ desired-state repo.
   (`.output/public`). The index route is pre-rendered at build time and
   served from the assets, with the hashed client bundle under `/_nuxt/`;
   every path no asset matches is rendered per request in the Worker. Its
-  tests (`apps/web/test`, vitest under `@nuxt/test-utils`) run in Checks.
-  There is no database and no runtime secret.
+  tests (`apps/web/test`, vitest under `@nuxt/test-utils`) are not run by
+  any lane: a pull request builds and dry-deploys the site, so run `pnpm
+  typecheck && pnpm lint && pnpm test` before you push. There is no
+  database and no runtime secret.
 - **`tooling/*`** — shared TypeScript and ESLint configuration, and the
   deploy-time wrangler renderer for workers that take wiring.
 

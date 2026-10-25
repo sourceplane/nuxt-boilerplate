@@ -8,7 +8,7 @@ behind it — on **Cloudflare Workers + Static Assets** through Nitro's own
 
 <!-- 03-docs:begin -->
 Not recorded yet. The bootstrap's last phase writes the live URLs, the
-workspace and the secrets inventory into
+workspace and the secrets the site uses into
 [ai/context/deployment.md](ai/context/deployment.md); how the site deploys
 and how to operate it is in
 [ai/context/operations.md](ai/context/operations.md).
@@ -53,9 +53,11 @@ changed components and runs each lane against the workspace in
 converged on the same commit; `dev` only verifies. The Worker is
 `nuxt-boilerplate-web-<env>` on your account's workers.dev subdomain, and
 every deploy is smoke-tested over HTTP: the home page must be the Nuxt app,
-and a path no static asset matches must be answered by the Worker.
-`checks.yml` runs install, typecheck, lint, test and build on every pull
-request. (A push to `main` runs `ci.yml` alone, which builds and deploys.)
+and a path no static asset matches must be answered by the Worker. A pull
+request runs the same pipeline's verify lanes: the site built and
+dry-deployed for each environment, with nothing deployed. They do not lint
+or run the tests, so run `pnpm typecheck`, `pnpm lint` and `pnpm test`
+before you push. (A push to `main` builds, deploys and smoke-tests.)
 
 The pipeline holds one credential, GitHub's own `GITHUB_TOKEN`. The
 Cloudflare token and account id are brokered per run from the workspace's
