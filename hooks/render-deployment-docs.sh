@@ -54,16 +54,47 @@ badge() { case "$1" in 2*|3*) echo "LIVE ($1)" ;; 000) echo "unreachable" ;; *) 
 # The environment's address: its `url` in intent.yaml when that is not the
 # workers.dev URL (a custom domain the owner attached), else the workers.dev
 # URL itself.
+#
+# STANDARD LIBRARY ONLY. The build box has python3 but not PyYAML, and an
+# `import yaml` that fails ended this hook with exit 1 and no message:
+# console builds reached 03-docs and stopped here, with the site live.
+# PyYAML is used when present; otherwise the one key this needs is read by
+# indentation: environments → <env> → url.
 env_url() {
   python3 - "$1" "https://${brand}-web-$1.${sub}.workers.dev" <<'PY'
-import sys, yaml
+import re, sys
 env, fallback = sys.argv[1], sys.argv[2]
+
+def by_indent(text):
+    path, want = [], ["environments", env, "url"]
+    for line in text.splitlines():
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        m = re.match(r"^( *)([A-Za-z0-9_.-]+):(.*)$", line)
+        if not m:
+            continue
+        depth = len(m.group(1))
+        while path and path[-1][0] >= depth:
+            path.pop()
+        path.append((depth, m.group(2)))
+        if [k for _, k in path] == want:
+            value = m.group(3).split(" #")[0].strip()
+            return value.strip("'\"")
+    return ""
+
 try:
-    d = yaml.safe_load(open("intent.yaml")) or {}
+    text = open("intent.yaml").read()
+except OSError:
+    text = ""
+try:
+    import yaml
+    d = yaml.safe_load(text) or {}
     url = ((d.get("environments") or {}).get(env) or {}).get("url") or ""
+except ImportError:
+    url = by_indent(text)
 except Exception:
     url = ""
-print(url.rstrip("/") or fallback)
+print(str(url).rstrip("/") or fallback)
 PY
 }
 stage_url="$(env_url stage)"; prod_url="$(env_url prod)"
