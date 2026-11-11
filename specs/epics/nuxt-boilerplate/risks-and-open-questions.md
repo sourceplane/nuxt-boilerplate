@@ -138,3 +138,17 @@ astro-boilerplate (AB-L) and portfolio-starter-kit (PK-L) hit it first
 (2026-11-06). The hook now uses PyYAML when present and reads that one key by
 indentation otherwise; `testing/render.test.sh` runs it under a python3 with
 no third-party packages.
+
+## NB-N — A typed workers.dev subdomain fails after deploy (RESOLVED)
+
+The card asked for the subdomain in a form. There is one right answer, the
+account's own, and a wrong one is only found when the smoke check tests an
+address nothing answers on: a console build on 2026-11-11
+(`vijayakrishnans/nuxt-site`, run 42994816304) carried `next`, so both lanes
+deployed to the real address and then smoked `*.next.workers.dev` until the
+convergence watch gave up. blog-starter (BS-G) and portfolio-starter-kit
+(PK6) had already moved to reading it from the Cloudflare connection; this
+baseline had not. The card now declares
+`from: connection.cloudflare.workersSubdomain`, so the console renders no
+field and there is no box to get wrong. A hand-run build still passes
+`--set subdomain`.

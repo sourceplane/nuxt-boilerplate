@@ -10,6 +10,7 @@ the code departed from `design.md` or from the upstream template.
 | NB2 — ready to instantiate | ✅ Shipped | [#3](https://github.com/sourceplane/nuxt-boilerplate/pull/3) |
 | NB3 — a baseline | ✅ Shipped | [#4](https://github.com/sourceplane/nuxt-boilerplate/pull/4) (NB-4), tagged `baseline-v1` |
 | NB4 — one landing | 🟡 In progress | this PR (NB-5), to be tagged `baseline-v2` |
+| The subdomain from the connection (risk NB-N) | 🟡 In review | this PR, to be tagged `baseline-v5` |
 
 ## Departures from the upstream template
 
